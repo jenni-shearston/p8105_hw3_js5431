@@ -33,11 +33,10 @@ brfss = p8105.datasets::brfss_smart2010 %>%
   janitor::clean_names() %>%
   rename(state = locationabbr, 
          county = locationdesc) %>% 
-  filter(topic == "Overall Health") %>% 
+  filter(topic == "Overall Health") %>%
   arrange(year, state, county) %>% 
-  mutate(as.factor(response),
-            fct_relevel(response, 
-                        c('Excellent', 'Very good', 'Good', 'Fair', 'Poor')))
+  mutate(response = as.factor(response)) %>% 
+  select(year, state, county, response, sample_size)
 
 
 ```
@@ -46,10 +45,39 @@ brfss = p8105.datasets::brfss_smart2010 %>%
 #### Questions and Responses
 
 * In 2002, which states were observed at 7 locations?
-    + *Response*
+    + In 2002, 3 states were observed at 7 locations: Connecticut, Florida, and North Carolina.
+    
+```{r states observed at 7 loc.}
+
+ brfss %>% 
+  filter(year == "2002") %>% 
+  group_by(state) %>% 
+  summarize(n_counties = n_distinct(county)) %>% 
+  filter(n_counties == 7)
+
+```
+    
 
 * Make a “spaghetti plot” that shows the number of observations in each state from 2002 to 2010.
-    + *Response*
+    + This plot is horrifying. I removed the legend, as trying to determine which line represents which individual state is anxiety inducing. Overall, I would say that this plot shows that for most states, the total number of observations has remained fairly constant over time, with a few states having very large variability.
+
+```{r spaghetti plot - obs by state}
+
+brfss %>%
+  group_by(year, state) %>% 
+  summarize(obs_state = sum(sample_size)) %>% 
+  ggplot(aes(x = year, y = obs_state, color = state)) +
+  geom_line() +
+  labs(
+    title = "Total Observations",
+    x = "Year",
+    y = "No. of Observations",
+    caption = "Data from the BRFSS, p8105 datasets package") +
+  theme(legend.position="none")
+  
+
+```
+
 
 * Make a table showing, for the years 2002, 2006, and 2010, the mean and standard deviation of the proportion of “Excellent” responses across locations in NY State.
     + *Response*
