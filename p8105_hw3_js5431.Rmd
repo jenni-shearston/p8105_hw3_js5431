@@ -81,7 +81,7 @@ brfss %>%
 * Make a table showing, for the years 2002, 2006, and 2010, the mean and standard deviation of the proportion of “Excellent” responses across locations in NY State.
     + The mean and standard deviation of the proportion of "Excellent" responses is pretty similar for NY state for all three years. 
 
-```{r}
+```{r table}
 
 brfss %>% 
   filter(state == "NY", 
@@ -98,7 +98,7 @@ brfss %>%
 * For each year and state, compute the average proportion in each response category (taking the average across locations in a state). Make a five-panel plot that shows, for each response category separately, the distribution of these state-level averages over time.
     + Over time, the proportion of overall responses in each category seems to stay fairly consistent, such that "Very good" is consistently the most selected response, and "Poor" is the least selected. Within each category, there is some variability by state in the actual proportion of respondents who select each choice; interestingly, this variability sees similar for each choice, with the exception of "Poor", which seems to have a smaller variability.
 
-```{r}
+```{r 5 panel plot}
 
 brfss %>%
   group_by(year, state, response) %>% 
@@ -112,3 +112,24 @@ brfss %>%
 
 
 ## Problem #2
+
+#### Data import and cleaning
+
+```{r load and clean Instacart}
+
+library(p8105.datasets)
+
+icart = p8105.datasets::instacart %>% 
+  janitor::clean_names() %>% 
+  View
+
+```
+
+#### Instacart dataset description
+write a short description of the dataset, noting the size and structure of the data, describing some key variables, and giving illstrative examples of observations.
+
+The Instacart dataset includes data from selected orders from an online grocery store; it contains `r nrow(icart)` rows and `r ncol(icart)` columns, and is formatted such that each row is a product from an order. Only one order for any particular individual is inlcuded.
+
+Key variables include 
+
+#### Questions and responses
