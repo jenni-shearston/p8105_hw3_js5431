@@ -120,16 +120,48 @@ brfss %>%
 library(p8105.datasets)
 
 icart = p8105.datasets::instacart %>% 
-  janitor::clean_names() %>% 
-  View
+  janitor::clean_names()
 
 ```
 
 #### Instacart dataset description
-write a short description of the dataset, noting the size and structure of the data, describing some key variables, and giving illstrative examples of observations.
 
 The Instacart dataset includes data from selected orders from an online grocery store; it contains `r nrow(icart)` rows and `r ncol(icart)` columns, and is formatted such that each row is a product from an order. Only one order for any particular individual is inlcuded.
 
-Key variables include 
+Key variables include several unique IDs, such as order ID, product ID, and user ID; product information such as product name, aisle, and department; and interesting order information such as the time of day the order was placed and if the item has been ordered before. For example, an individual (user id = 112108) purchased 8 items as part of their order, including yogurt, milk, celery, cucumber, sardines, bananas, avacado, and string cheese. These items were ordered at 10 am, and 4 of them had been ordered by this customer in the past. 
 
 #### Questions and responses
+
+* How many aisles are there, and which aisles are the most items ordered from?
+    + There are 134 aisles, and the following aisles are most ordered from: Fresh vegetables, fresh fruits, packaged vegetables fruits, yogurt, and packaged cheese. 
+    
+```{r}
+
+icart %>%
+  summarize(dist_aisle = n_distinct(aisle_id, na.rm = TRUE))
+
+icart %>% 
+  group_by(aisle) %>% 
+  summarize(n()) %>% 
+  top_n(5)
+
+
+```
+
+
+* Make a plot that shows the number of items ordered in each aisle. Order aisles sensibly, and organize your plot so others can read it.
+
+```{r}
+
+icart %>% 
+  group_by(department, aisle) %>% 
+  summarize(items_aisle = n()) %>% 
+  ggplot(aes(x = department, y = aisle)) +
+  geom_point(aes(size = items_aisle), alpha = .5) 
+
+```
+
+
+* Make a table showing the most popular item aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”
+
+* Make a table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice Cream are ordered on each day of the week; format this table for human readers (i.e. produce a 2 x 7 table).
