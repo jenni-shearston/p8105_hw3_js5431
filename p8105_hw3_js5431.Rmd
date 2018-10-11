@@ -225,7 +225,7 @@ The NOAA dataset contains select weather information for New York state, spannin
 * Do some data cleaning. Create separate variables for year, month, and day. Ensure observations for temperature, precipitation, and snowfall are given in reasonable units. For snowfall, what are the most commonly observed values? Why?
     + For snowfall, 0 cm is the most commonly observed value. This makes sense for a couple of reasons: in the state of New York, it does not smow most of the time, and when it does snow, it does not snow at all locations. Also, the data is currently recorded to one decimal point, and it is unlikely that many snowfalls are similar to the tenth of a cm. However, even after rounding to whole centimeters, 0 is still the most common response.
 
-```{r}
+```{r clean noaa}
 
 noaa = p8105.datasets::ny_noaa %>% 
   janitor::clean_names() %>% 
@@ -252,8 +252,29 @@ noaa %>%
 ```
 
     
-* Make a two-panel plot showing the average temperature in January and in July in each station across years. Is there any observable / interpretable structure? Any outliers?
+* Make a two-panel plot showing the average max temperature in January and in July in each station across years. Is there any observable / interpretable structure? Any outliers?
     + Answer
+
+```{r two panel plot max temp}
+
+noaa %>% 
+  filter(month == "01" | month == "06") %>% 
+  group_by(id, year, month) %>% 
+  summarise(avg_max_temp = mean(tmax_c, na.rm = TRUE)) %>% 
+  ggplot(aes(x = year, y = avg_max_temp, color = id)) +
+  geom_point(alpha = .5) +
+  geom_smooth(se = FALSE) +
+  facet_grid(~month) +
+  theme(legend.position="none")
+  
+
+```
+
 
 * Make a two-panel plot showing (i) tmax vs tmin for the full dataset (note that a scatterplot may not be the best option); and (ii) make a plot showing the distribution of snowfall values greater than 0 and less than 100 separately by year.
     + Answer
+
+```{r}
+
+```
+
