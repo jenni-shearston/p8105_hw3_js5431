@@ -236,7 +236,8 @@ noaa = p8105.datasets::ny_noaa %>%
          tmin_c = tmin/10,
          prcp_mm = prcp/10,
          snow_cm = snow/10,
-         snwd_cm = snwd/10) %>% 
+         snwd_cm = snwd/10,
+         year = as.numeric(year)) %>% 
   select(id, year, month, day, tmax_c, tmin_c, prcp_mm, snow_cm, snwd_cm)
 
 noaa %>% 
@@ -253,20 +254,27 @@ noaa %>%
 
     
 * Make a two-panel plot showing the average max temperature in January and in July in each station across years. Is there any observable / interpretable structure? Any outliers?
-    + Answer
+    + The max temperature in January appears to range between -10 and 10 degrees for all locations, and for July ranges between 20 and 32 degrees for all locations. There are a few outliers where max temperatures are either colder or warmer for speicfic locations during a specific year, but in general, there is not a lot of variability in max temperature by location for the state of New York, as temperatures tend to stay within a 10 degree band.
 
-```{r two panel plot max temp}
+```{r two panel plot avg max temp}
 
 noaa %>% 
-  filter(month == "01" | month == "06") %>% 
-  group_by(id, year, month) %>% 
-  summarise(avg_max_temp = mean(tmax_c, na.rm = TRUE)) %>% 
+  filter(month == "01" | month == "07") %>% 
+  group_by(id, year, month) %>%
+  filter(!is.na(tmax_c)) %>% 
+  summarise(avg_max_temp = mean(tmax_c)) %>% 
+  mutate(month = recode(month, "01" = "January", "07" = "July")) %>% 
   ggplot(aes(x = year, y = avg_max_temp, color = id)) +
-  geom_point(alpha = .5) +
-  geom_smooth(se = FALSE) +
+  geom_line() +
   facet_grid(~month) +
-  theme(legend.position="none")
-  
+  theme_bw() +
+  theme(legend.position="none") +
+  labs(
+    title = "Avg. Max Temp by Location, NY",
+    x = "Year",
+    y = "Avg. Max Temp (C)",
+    caption = "Data from NOAA, p8105 package"
+  )
 
 ```
 
@@ -274,7 +282,8 @@ noaa %>%
 * Make a two-panel plot showing (i) tmax vs tmin for the full dataset (note that a scatterplot may not be the best option); and (ii) make a plot showing the distribution of snowfall values greater than 0 and less than 100 separately by year.
     + Answer
 
-```{r}
+```{r plots of tmax v tmin and snowfall}
+
 
 ```
 
