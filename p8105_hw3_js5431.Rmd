@@ -280,11 +280,11 @@ noaa %>%
 
 
 * Make a two-panel plot showing (i) tmax vs tmin for the full dataset (note that a scatterplot may not be the best option); and (ii) make a plot showing the distribution of snowfall values greater than 0 and less than 100 separately by year.
-    + Answer
+    + Tmax and tmin are corrolated, as expected, and snowfall remains fairly consistent from year to year, with each boxplot showing similiar medians. 
 
 ```{r plots of tmax v tmin and snowfall}
 
-#library(patchwork)
+library(patchwork)
 
 temp_plot = ggplot(noaa, aes(x = tmax_c, y = tmin_c)) +
   geom_hex() +
@@ -307,7 +307,7 @@ snow_plot = noaa %>%
     x = "Year",
     y = "Snowfall (cm)")
 
-#patchwork::temp_plot / snow_plot
+temp_plot / snow_plot
 
 ```
 
