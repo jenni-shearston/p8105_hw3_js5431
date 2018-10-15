@@ -284,6 +284,30 @@ noaa %>%
 
 ```{r plots of tmax v tmin and snowfall}
 
+#library(patchwork)
+
+temp_plot = ggplot(noaa, aes(x = tmax_c, y = tmin_c)) +
+  geom_hex() +
+  geom_smooth() +
+  labs(
+    title = "Max Temp vs Min Temp",
+    x = "Max Temp (C)",
+    y = "Min Temp (C)") +
+  theme(legend.position = "right")
+
+snow_plot = noaa %>%
+  filter(snow_cm > 0 & snow_cm < 100) %>%
+  mutate(year = as.factor(year)) %>% 
+  ggplot(aes(x = year, y = snow_cm, fill = year)) +
+  geom_boxplot() +
+  theme(legend.position="none") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(
+    title = "Snowfall Density",
+    x = "Year",
+    y = "Snowfall (cm)")
+
+#patchwork::temp_plot / snow_plot
 
 ```
 
